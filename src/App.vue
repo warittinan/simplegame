@@ -103,7 +103,7 @@ const timer = () => {
 </script>
  
 <template>
-    <div class="w-screen h-screen  cursor-default bg-[url('../src/photo/background.png')] bg-cover" >
+    <div class="w-screen h-screen  cursor-default bg-[url('../public/photo/background.png')] bg-cover" >
         <div class="w-full h-full   text-white  " v-show="state == 0">
             <div class=" w-full h-[10%] bg-black justify-center items-center flex text-6xl">
                 <h1>Click The Color Not The Word</h1>
@@ -156,7 +156,7 @@ const timer = () => {
         <div class="w-full h-full  flex justify-center  items-center text-black " v-show="state == 3">
             <div class="w-[60%] h-[90%] bg-blue-200 flex flex-col items-center rounded-lg  ">
                 <div class="h-[5%] w-full bg-blue-900 rounded-t-lg flex justify-end  ">
-                    <img src="./photo/remove.png" class="w-6 h-6 cursor-pointer hover:opacity-70 " @click="home">
+                    <img src="../public/photo/remove.png" class="w-6 h-6 cursor-pointer hover:opacity-70 " @click="home">
                 </div>
                 <div class="w-full h-[2%] ">
                     <div class="w-full h-full bg-gray-200  dark:bg-gray-700">
