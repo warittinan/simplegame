@@ -7,8 +7,12 @@ const colorcode = ref(['text-blue-500', 'text-green-500', 'text-yellow-500', 'te
 const color = ref('')
 const word = ref(['Blue', 'Green', 'Yellow', 'Red', 'Purple'])
 const showword = ref('')
+const size = ref(100)
+const score = ref(0)
+const calsize = ref(0)
 onBeforeMount(() => {
-    state.value = 0
+    state.value = 3
+    size.value=100
 })
 const next = () => {
     state.value++
@@ -18,28 +22,33 @@ const Level = (level) => {
         case 'Easy':
             countdowntimer.value = 30
             state.value++
+            calsize.value=100/30
+            
             countdown()
             break;
         case 'Medium':
             countdowntimer.value = 20
             state.value++
+            calsize.value=100/20
             countdown()
             break;
         case 'Hard':
             countdowntimer.value = 10
             state.value++
+            calsize.value=100/10
             countdown()
             break;
     }
 }
 const countdown = () => {
-    let timer = setInterval(() => {
+    let time = setInterval(() => {
         countdowntime.value--;
         if (countdowntime.value <= 0) {
-            clearInterval(timer);
+            clearInterval(time);
             state.value++
             randomword()
             randomcolor()
+            timer()
         }
     }, 1000);
 }
@@ -67,11 +76,27 @@ const check = (word) => {
     if (color.value.includes(word.toLowerCase())) {
         randomword()
         randomcolor()
+        score.value++
     }
 }
 const home = () => {
     state.value = 0
     countdowntime.value = 3
+    countdowntimer.value = 0
+    score.value = 0
+    size.value=100
+    
+}
+const timer = () => {
+    let timer = setInterval(() => {
+        countdowntimer.value--;
+        size.value= size.value-calsize.value
+        console.log(size.value);
+        if (countdowntimer.value <= 0) {
+            clearInterval(timer);
+            state.value++
+        }
+    }, 1000);
 }
 </script>
  
@@ -94,15 +119,21 @@ const home = () => {
                 @click="Level('Hard')">Hard</button>
         </div>
 
-        <div class="w-full h-full  flex justify-center  items-center text-black" v-show="state == 2">
+        <div class="w-full h-full  flex justify-center  items-center text-blue-700 text-9xl font-bold" v-show="state == 2">
             <h1>{{ countdowntime }}</h1>
         </div>
         <div class="w-full h-full  flex justify-center  items-center text-black " v-show="state == 3">
-            <div class="w-[60%] h-[90%] bg-purple-200 flex flex-col items-center rounded-lg ">
-                <div class="h-[5%] w-full bg-purple-900 rounded-t-lg flex justify-end  ">
+            <div class="w-[60%] h-[90%] bg-blue-200 flex flex-col items-center rounded-lg  ">
+                <div class="h-[5%] w-full bg-blue-900 rounded-t-lg flex justify-end  ">
                     <img src="./photo/remove.png" class="w-6 h-6 cursor-pointer hover:opacity-70 " @click="home">
                 </div>
-                <div class="h-[45%] w-[90%] bg-white flex flex-col justify-center items-center text-8xl mt-5 rounded-2xl ">
+                <div class="w-full h-[2%] ">
+                    <div class="w-full h-full bg-gray-200  dark:bg-gray-700">
+                        <div  :class="size < 30?'bg-red-600 h-full':'bg-green-600 h-full'" :style="`width: ${size}%; `" style="transition: width 1500ms linear 0s; "
+                            > </div>
+                    </div>
+                </div>
+                <div class="h-[45%] w-[90%] bg-white flex flex-col justify-center items-center text-8xl mt-5  rounded-2xl ">
                     <h1 class=" font-bold " :class="color">{{ showword }}</h1>
                 </div>
                 <div class="w-full h-[30%] flex space-x-2 justify-center pt-5   ">
@@ -112,9 +143,23 @@ const home = () => {
                             @click="check(stringcolor)">{{ stringcolor }}</button>
                     </div>
                 </div>
-
+                 
             </div>
         </div>
-</div></template>
+        <div class="w-full h-full flex justify-center items-center" v-show="state==4">
+                    <div class="w-[40%] h-[50%] bg-blue-300 rounded-xl text-white flex  flex-col justify-center items-center cursor-default">
+                        <div class="w-full h-[20%] flex justify-center items-center">
+                            <h1 class="text-5xl font-bold">Game over</h1>
+                        </div>
+                        <div class="w-full h-[20%] flex justify-center items-center">
+                            <h1 class="text-5xl font-bold">Score: {{ score }}</h1>
+                        </div>
+                        <div class="w-full h-[20%] flex justify-center items-center">
+                            <button class="w-32 h-16 rounded-3xl text-3xl bg-blue-900 hover:bg-blue-900/80 " @click="home">Home</button>
+                        </div>
+                    </div>
+                </div> 
+    </div>
+</template>
  
 <style scoped></style>
