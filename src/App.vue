@@ -103,8 +103,8 @@ const timer = () => {
 </script>
  
 <template>
-    <div class="w-screen h-screen  bg-white cursor-default ">
-        <div class="w-full h-full   text-white   " v-show="state == 0">
+    <div class="w-screen h-screen  cursor-default bg-[url('../src/photo/background.png')] bg-cover" >
+        <div class="w-full h-full   text-white  " v-show="state == 0">
             <div class=" w-full h-[10%] bg-black justify-center items-center flex text-6xl">
                 <h1>Click The Color Not The Word</h1>
             </div>
