@@ -11,8 +11,8 @@ const size = ref(100)
 const score = ref(0)
 const calsize = ref(0)
 onBeforeMount(() => {
-    state.value = 3
-    size.value=100
+    state.value = 0
+    size.value = 100
 })
 const next = () => {
     state.value++
@@ -22,20 +22,20 @@ const Level = (level) => {
         case 'Easy':
             countdowntimer.value = 30
             state.value++
-            calsize.value=100/30
-            
+            calsize.value = 100 / 30
+
             countdown()
             break;
         case 'Medium':
             countdowntimer.value = 20
             state.value++
-            calsize.value=100/20
+            calsize.value = 100 / 20
             countdown()
             break;
         case 'Hard':
             countdowntimer.value = 10
             state.value++
-            calsize.value=100/10
+            calsize.value = 100 / 10
             countdown()
             break;
     }
@@ -72,8 +72,11 @@ const randomcolor = () => {
     }
 }
 
-const check = (word) => {
-    if (color.value.includes(word.toLowerCase())) {
+const check = (string) => {
+    let number = Math.floor(Math.random() * 5)
+   
+    if (color.value.includes(string.toLowerCase())) {
+        word.value[number] = word.value.splice(1, 1, word.value[number])[0];
         randomword()
         randomcolor()
         score.value++
@@ -84,13 +87,12 @@ const home = () => {
     countdowntime.value = 3
     countdowntimer.value = 0
     score.value = 0
-    size.value=100
-    
+    size.value = 100
 }
 const timer = () => {
     let timer = setInterval(() => {
         countdowntimer.value--;
-        size.value= size.value-calsize.value
+        size.value = size.value - calsize.value
         console.log(size.value);
         if (countdowntimer.value <= 0) {
             clearInterval(timer);
@@ -101,10 +103,39 @@ const timer = () => {
 </script>
  
 <template>
-    <div class="w-screen h-screen  ">
-        <div class="w-full h-full  flex flex-col justify-center space-y-5 items-center text-white " v-show="state == 0">
-            <button class="w-32 h-16 bg-black/70 rounded-3xl text-2xl hover:bg-black " @click="next()">Play</button>
-            <button class="w-32 h-16 bg-black/70 rounded-3xl text-2xl hover:bg-black  ">Settings</button>
+    <div class="w-screen h-screen  bg-white cursor-default ">
+        <div class="w-full h-full   text-white   " v-show="state == 0">
+            <div class=" w-full h-[10%] bg-black justify-center items-center flex text-6xl">
+                <h1>Click The Color Not The Word</h1>
+            </div>
+            <div class="w-full h-[90%] flex flex-col justify-center items-center space-y-5">
+                <button class="w-32 h-16 bg-blue-500 rounded-3xl text-2xl hover:bg-blue-400 " @click="next()">Play</button>
+                <button class="w-40 h-16 bg-blue-500 rounded-3xl text-2xl hover:bg-blue-400"
+                    onclick="my_modal_2.showModal()">How to play</button>
+                <dialog id="my_modal_2" class="modal">
+                    <div class="modal-box">
+                        <ul style="list-style-type:decimal">
+                            <li>
+                                เมื่อเกมเริ่มต้นตัวจับเวลาจะเริ่มนับถอยหลังจากค่าที่กำหนดตามระดับlevel
+                            </li>
+                            <li>
+                                คลิกคำที่ตรงกับสีของข้อความไม่ใช่ตัวข้อความ ตัวอย่างเช่น หากคำว่า Red แสดงเป็นสีน้ำเงิน
+                                ให้คลิกที่คำว่า Blue
+                            </li>
+                            <li>
+                                ได้รับหนึ่งคะแนนจากการเลือกที่ถูกต้องแต่ละครั้ง
+                            </li>
+                            <li>เกมจะจบลงเมื่อเวลาถึง 0 </li>
+                        </ul>
+
+                    </div>
+                    <form method="dialog" class="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+            </div>
+
+
         </div>
         <div class="w-full h-full  flex flex-col justify-center space-y-5 items-center text-white cursor-default  "
             v-show="state == 1">
@@ -129,8 +160,8 @@ const timer = () => {
                 </div>
                 <div class="w-full h-[2%] ">
                     <div class="w-full h-full bg-gray-200  dark:bg-gray-700">
-                        <div  :class="size < 30?'bg-red-600 h-full':'bg-green-600 h-full'" :style="`width: ${size}%; `" style="transition: width 1500ms linear 0s; "
-                            > </div>
+                        <div :class="size < 30 ? 'bg-red-600 h-full' : 'bg-green-600 h-full'" :style="`width: ${size}%; `"
+                            style="transition: width 1500ms linear 0s; "> </div>
                     </div>
                 </div>
                 <div class="h-[45%] w-[90%] bg-white flex flex-col justify-center items-center text-8xl mt-5  rounded-2xl ">
@@ -143,22 +174,24 @@ const timer = () => {
                             @click="check(stringcolor)">{{ stringcolor }}</button>
                     </div>
                 </div>
-                 
+
             </div>
         </div>
-        <div class="w-full h-full flex justify-center items-center" v-show="state==4">
-                    <div class="w-[40%] h-[50%] bg-blue-300 rounded-xl text-white flex  flex-col justify-center items-center cursor-default">
-                        <div class="w-full h-[20%] flex justify-center items-center">
-                            <h1 class="text-5xl font-bold">Game over</h1>
-                        </div>
-                        <div class="w-full h-[20%] flex justify-center items-center">
-                            <h1 class="text-5xl font-bold">Score: {{ score }}</h1>
-                        </div>
-                        <div class="w-full h-[20%] flex justify-center items-center">
-                            <button class="w-32 h-16 rounded-3xl text-3xl bg-blue-900 hover:bg-blue-900/80 " @click="home">Home</button>
-                        </div>
-                    </div>
-                </div> 
+        <div class="w-full h-full flex justify-center items-center" v-show="state == 4">
+            <div
+                class="w-[40%] h-[50%] bg-blue-300 rounded-xl text-white flex  flex-col justify-center items-center cursor-default">
+                <div class="w-full h-[20%] flex justify-center items-center">
+                    <h1 class="text-5xl font-bold">Game over</h1>
+                </div>
+                <div class="w-full h-[20%] flex justify-center items-center">
+                    <h1 class="text-5xl font-bold">Score: {{ score }}</h1>
+                </div>
+                <div class="w-full h-[20%] flex justify-center items-center">
+                    <button class="w-32 h-16 rounded-3xl text-3xl bg-blue-900 hover:bg-blue-900/80 "
+                        @click="home">Home</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
  
